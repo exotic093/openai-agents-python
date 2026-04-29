@@ -39,13 +39,30 @@ to write to it whenever you share something worth remembering.
 
 ## Onboarding
 
-The first time you run `jarvis`, it interviews you about who you are — name,
-work, hobbies, location, schedule, goals, communication style, privacy
-boundaries — and stores everything in long-term memory. From then on, every
-session loads your full profile into Jarvis's system prompt.
+Two ways to give Jarvis its initial knowledge of you:
 
-Re-run anytime with `jarvis onboard`, or `/onboard` from inside the REPL.
-View the current profile with `/profile`.
+**Pre-seeded profile (fastest):**
+
+```bash
+jarvis seed              # writes the bundled profile facts; skips ones already present
+jarvis seed --overwrite  # force-refresh
+```
+
+Edit `jarvis/seed_data.py` to change the bundled facts.
+
+**Interactive interview:**
+
+```bash
+jarvis onboard
+```
+
+A 25-question briefing covering identity, work, hobbies, lifestyle,
+relationships, goals, communication style, and privacy boundaries.
+
+Either way, facts land in `~/.jarvis/memory.db` and are injected into Jarvis's
+system prompt every session under `=== USER PROFILE ===`.
+
+View / refresh anytime: `/profile` or `/onboard` inside the REPL.
 
 ## REPL commands (text mode)
 

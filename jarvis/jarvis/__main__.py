@@ -12,10 +12,22 @@ def main() -> int:
         "mode",
         nargs="?",
         default="text",
-        choices=["text", "voice", "onboard"],
-        help="text REPL (default), voice mode, or onboarding interview.",
+        choices=["text", "voice", "onboard", "seed"],
+        help="text REPL (default), voice mode, onboarding interview, or seed profile.",
+    )
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="When seeding, overwrite existing facts.",
     )
     args = parser.parse_args()
+
+    if args.mode == "seed":
+        from . import seed_data
+
+        n = seed_data.seed(overwrite=args.overwrite)
+        print(f"seeded {n} profile facts into long-term memory.")
+        return 0
 
     if args.mode == "onboard":
         from . import profile
