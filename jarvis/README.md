@@ -105,6 +105,20 @@ See `.env.example` for the full credential list and links to each MCP
 server's documentation. Use `/integrations` in the REPL to see active vs.
 inactive integrations.
 
+### Guided setup: `jarvis auth`
+
+```bash
+jarvis auth                # list every integration, ● = configured / ○ = not
+jarvis auth gmail          # walk through Gmail credentials
+jarvis auth slack          # walk through Slack bot setup
+jarvis auth mt5            # MetaTrader 5 (alias of metatrader5)
+```
+
+Each helper prints what to do, opens the relevant signup/console page in
+your browser, prompts for the values (secrets are read with `getpass`), and
+writes them to `.env` — preserving existing keys and only rewriting the
+ones you change.
+
 > ⚠️ Most npm-distributed MCP servers require `node` ≥ 20 on your `PATH`.
 > Auth-scope choices live in each provider's setup docs (link in
 > `jarvis/integrations.py`).

@@ -1,4 +1,4 @@
-"""CLI entry point: `jarvis` (text mode) or `jarvis voice` (voice mode)."""
+"""CLI entry point for Jarvis."""
 
 from __future__ import annotations
 
@@ -12,8 +12,14 @@ def main() -> int:
         "mode",
         nargs="?",
         default="text",
-        choices=["text", "voice", "onboard", "seed"],
-        help="text REPL (default), voice mode, onboarding interview, or seed profile.",
+        choices=["text", "voice", "onboard", "seed", "auth"],
+        help="text REPL (default), voice mode, onboarding, profile seed, or integration auth.",
+    )
+    parser.add_argument(
+        "target",
+        nargs="?",
+        default=None,
+        help="For `auth`: integration name (e.g. gmail, slack). Omit to list.",
     )
     parser.add_argument(
         "--overwrite",
@@ -21,6 +27,11 @@ def main() -> int:
         help="When seeding, overwrite existing facts.",
     )
     args = parser.parse_args()
+
+    if args.mode == "auth":
+        from . import auth
+
+        return auth.run(args.target)
 
     if args.mode == "seed":
         from . import seed_data
