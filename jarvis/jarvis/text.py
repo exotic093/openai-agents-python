@@ -11,6 +11,7 @@ from rich.panel import Panel
 
 from .agent import build_agent
 from .config import SESSION_DB, settings
+from .profile import profile_block, run_onboarding
 
 console = Console()
 
@@ -23,7 +24,8 @@ async def _run() -> None:
         Panel.fit(
             f"[bold cyan]JARVIS[/] online. Model: {settings.text_model}. "
             f"Workspace: {settings.workspace}.\n"
-            "Type your request, or [bold]/exit[/] to quit, [bold]/reset[/] to clear session.",
+            "Commands: [bold]/exit[/] quit · [bold]/reset[/] clear session · "
+            "[bold]/profile[/] view · [bold]/onboard[/] re-run interview.",
             border_style="cyan",
         )
     )
@@ -42,6 +44,13 @@ async def _run() -> None:
         if user_input == "/reset":
             await session.clear_session()
             console.print("[yellow]session cleared.[/]")
+            continue
+        if user_input == "/profile":
+            console.print(Panel(profile_block(), title="profile", border_style="magenta"))
+            continue
+        if user_input == "/onboard":
+            run_onboarding()
+            agent = build_agent()  # rebuild so new profile flows into instructions
             continue
 
         try:

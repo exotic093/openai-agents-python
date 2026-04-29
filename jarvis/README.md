@@ -37,10 +37,22 @@ jarvis voice
 Long-term memory persists in `~/.jarvis/memory.db`. The agent is instructed
 to write to it whenever you share something worth remembering.
 
+## Onboarding
+
+The first time you run `jarvis`, it interviews you about who you are — name,
+work, hobbies, location, schedule, goals, communication style, privacy
+boundaries — and stores everything in long-term memory. From then on, every
+session loads your full profile into Jarvis's system prompt.
+
+Re-run anytime with `jarvis onboard`, or `/onboard` from inside the REPL.
+View the current profile with `/profile`.
+
 ## REPL commands (text mode)
 
 - `/exit` — quit
 - `/reset` — clear conversation session (memory is preserved)
+- `/profile` — print everything Jarvis knows about you
+- `/onboard` — rerun the interview to add/update facts
 
 ## Configuration
 
