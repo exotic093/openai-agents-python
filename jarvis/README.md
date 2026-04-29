@@ -79,9 +79,38 @@ All knobs live in `.env` — see `.env.example`. Notable ones:
 - `JARVIS_ALLOW_SHELL=0` — disable shell entirely.
 - `JARVIS_MODEL`, `JARVIS_VOICE_MODEL`, `JARVIS_VOICE` — model/voice overrides.
 
+## Integrations (MCP)
+
+Jarvis ships with a registry of MCP integrations covering the most common
+productivity, comms, and trading surfaces. Each is enabled automatically when
+its credentials are present in `.env`; nothing else is required.
+
+| Integration | Env vars | What it grants |
+| --- | --- | --- |
+| Gmail | `GMAIL_OAUTH_PATH` | Read, search, draft, label, send mail |
+| Outlook / M365 | `MS365_CLIENT_ID`, `MS365_TENANT_ID` | Mail, calendar, contacts, files |
+| Google Calendar | `GCAL_OAUTH_PATH` | List/create/update events, free-busy |
+| Calendly | `CALENDLY_API_TOKEN`, `CALENDLY_MCP_URL` | Event types, scheduling links, invitees |
+| Slack | `SLACK_BOT_TOKEN`, `SLACK_TEAM_ID` | Read channels/threads/DMs, send messages |
+| WhatsApp | `WHATSAPP_SESSION_PATH` | Read chats, search, send |
+| Telegram | `TELEGRAM_API_ID`, `TELEGRAM_API_HASH` | Read chats, search, send |
+| Notion | `NOTION_API_TOKEN` | Search/read/create/update pages and DBs |
+| TradingView | `TRADINGVIEW_USERNAME`, `TRADINGVIEW_PASSWORD` | Quotes, indicators, alerts |
+| MetaTrader 5 | `MT5_LOGIN`, `MT5_PASSWORD`, `MT5_SERVER` | Account, positions, market data, trade execution |
+| Broker (HTTP) | `BROKER_MCP_URL`, `BROKER_MCP_TOKEN` | Generic broker MCP (Alpaca, IB, etc.) |
+| HubSpot CRM | `HUBSPOT_ACCESS_TOKEN` | Contacts, companies, deals, notes |
+| QuickBooks | `QUICKBOOKS_CLIENT_ID`, `QUICKBOOKS_CLIENT_SECRET`, `QUICKBOOKS_REALM_ID` | Invoices, customers, P&L |
+
+See `.env.example` for the full credential list and links to each MCP
+server's documentation. Use `/integrations` in the REPL to see active vs.
+inactive integrations.
+
+> ⚠️ Most npm-distributed MCP servers require `node` ≥ 20 on your `PATH`.
+> Auth-scope choices live in each provider's setup docs (link in
+> `jarvis/integrations.py`).
+
 ## Extending
 
 Drop a new `@function_tool`-decorated function into `jarvis/tools/` and add it
-to `ALL_TOOLS` in `jarvis/tools/__init__.py`. To plug in an MCP server (Slack,
-Gmail, smart-home, etc.), construct an `MCPServerStdio`/`MCPServerStreamableHttp`
-and pass it via `mcp_servers=[...]` on the `Agent` in `jarvis/agent.py`.
+to `ALL_TOOLS` in `jarvis/tools/__init__.py`. To register a new MCP integration,
+add an `Integration(...)` entry to `REGISTRY` in `jarvis/integrations.py`.

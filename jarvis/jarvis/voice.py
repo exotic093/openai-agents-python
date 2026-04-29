@@ -19,6 +19,7 @@ from agents.realtime import RealtimeAgent, RealtimeRunner, RealtimeSession, Real
 
 from .agent import _instructions
 from .config import settings
+from .integrations import build_servers
 from .tools import ALL_TOOLS
 
 CHUNK_LENGTH_S = 0.05
@@ -27,11 +28,12 @@ FORMAT = np.int16
 CHANNELS = 1
 
 
-def _build_realtime_agent() -> RealtimeAgent:
+def _build_realtime_agent(mcp_servers=None) -> RealtimeAgent:
     return RealtimeAgent(
         name="Jarvis",
         instructions=_instructions(),
         tools=ALL_TOOLS,
+        mcp_servers=mcp_servers or [],
     )
 
 
@@ -128,8 +130,15 @@ class VoiceLoop:
             blocksize=chunk,
         )
         self.audio_player.start()
+        connected_servers = []
+        for s in build_servers():
+            try:
+                await s.connect()
+                connected_servers.append(s)
+            except Exception as e:
+                print(f"  ! integration {getattr(s, 'name', '?')} skipped: {e}")
         try:
-            runner = RealtimeRunner(_build_realtime_agent())
+            runner = RealtimeRunner(_build_realtime_agent(mcp_servers=connected_servers))
             async with await runner.run() as session:
                 self.session = session
                 self.audio_stream = sd.InputStream(
@@ -146,6 +155,11 @@ class VoiceLoop:
                 self.audio_player.stop()
             if self.audio_player:
                 self.audio_player.close()
+            for s in connected_servers:
+                try:
+                    await s.cleanup()
+                except Exception:
+                    pass
 
 
 def run() -> None:

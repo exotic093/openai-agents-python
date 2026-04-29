@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 from agents import Agent
+from agents.mcp import MCPServer
 
 from .config import settings
+from .integrations import build_servers
 from .memory import get_store
 from .profile import profile_block
 from .tools import ALL_TOOLS
@@ -50,10 +52,12 @@ Persona
 """.strip()
 
 
-def build_agent() -> Agent:
+def build_agent(mcp_servers: list[MCPServer] | None = None) -> Agent:
+    servers = mcp_servers if mcp_servers is not None else build_servers()
     return Agent(
         name="Jarvis",
         instructions=_instructions(),
         model=settings.text_model,
         tools=ALL_TOOLS,
+        mcp_servers=servers,
     )
