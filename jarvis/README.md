@@ -109,6 +109,7 @@ inactive integrations.
 
 ```bash
 jarvis auth                # list every integration, ● = configured / ○ = not
+jarvis auth all            # walk through ALL of them in one sitting
 jarvis auth gmail          # walk through Gmail credentials
 jarvis auth slack          # walk through Slack bot setup
 jarvis auth mt5            # MetaTrader 5 (alias of metatrader5)

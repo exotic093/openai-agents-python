@@ -399,14 +399,48 @@ def list_providers() -> None:
     )
 
 
+def run_all() -> int:
+    """Walk through every provider in sequence; user can skip any of them."""
+    console.print(
+        Panel.fit(
+            "[bold cyan]jarvis auth all[/] — full integration sweep.\n"
+            "For each integration: type [bold]y[/] to set it up, "
+            "[bold]n[/] to skip, [bold]q[/] to stop entirely.",
+            border_style="cyan",
+        )
+    )
+    done = 0
+    skipped = 0
+    for provider in PROVIDERS:
+        console.print(
+            f"\n[bold]› {provider.name}[/] — {provider.summary}"
+        )
+        choice = input("  configure now? [y/N/q]: ").strip().lower()
+        if choice == "q":
+            console.print("[yellow]stopped.[/]")
+            break
+        if choice != "y":
+            skipped += 1
+            continue
+        configure(provider)
+        done += 1
+    console.print(
+        f"\n[green]auth sweep done.[/] configured: {done} · skipped: {skipped}"
+    )
+    return 0
+
+
 def run(name: str | None) -> int:
     if not name:
         list_providers()
         console.print(
-            "\nRun [bold]jarvis auth <name>[/] to configure one. "
+            "\nRun [bold]jarvis auth <name>[/] for one, or "
+            "[bold]jarvis auth all[/] for the full sweep. "
             "Aliases: gcal, m365, mt5, qbo, broker."
         )
         return 0
+    if name.lower() == "all":
+        return run_all()
     provider = _find(name)
     if provider is None:
         console.print(f"[red]unknown integration: {name}[/]")
