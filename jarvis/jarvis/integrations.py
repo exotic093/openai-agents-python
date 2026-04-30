@@ -127,8 +127,8 @@ REGISTRY: list[Integration] = [
         description="WhatsApp: read chats, search messages, send (on command).",
         transport="stdio",
         required_env=["WHATSAPP_SESSION_PATH"],
-        command="npx",
-        args=["-y", "@lharries/whatsapp-mcp"],
+        command="uvx",
+        args=["whatsapp-mcp"],
         env_passthrough=["WHATSAPP_SESSION_PATH"],
     ),
     Integration(
@@ -136,8 +136,8 @@ REGISTRY: list[Integration] = [
         description="Telegram: read chats, search history, send messages.",
         transport="stdio",
         required_env=["TELEGRAM_API_ID", "TELEGRAM_API_HASH"],
-        command="npx",
-        args=["-y", "@chigwell/telegram-mcp"],
+        command="uvx",
+        args=["telegram-mcp"],
         env_passthrough=[
             "TELEGRAM_API_ID",
             "TELEGRAM_API_HASH",
@@ -169,8 +169,8 @@ REGISTRY: list[Integration] = [
         description="MetaTrader 5: account info, positions, orders, market data, trade execution.",
         transport="stdio",
         required_env=["MT5_LOGIN", "MT5_PASSWORD", "MT5_SERVER"],
-        command="npx",
-        args=["-y", "@ariadng/metatrader-mcp-server"],
+        command="uvx",
+        args=["metatrader-mcp-server"],
         env_passthrough=["MT5_LOGIN", "MT5_PASSWORD", "MT5_SERVER", "MT5_PATH"],
     ),
     Integration(

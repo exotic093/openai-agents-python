@@ -12,8 +12,8 @@ def main() -> int:
         "mode",
         nargs="?",
         default="text",
-        choices=["text", "voice", "onboard", "seed", "auth"],
-        help="text REPL (default), voice mode, onboarding, profile seed, or integration auth.",
+        choices=["text", "voice", "onboard", "seed", "auth", "bootstrap"],
+        help="text REPL (default), voice, onboarding, profile seed, integration auth, or bootstrap.",
     )
     parser.add_argument(
         "target",
@@ -26,7 +26,17 @@ def main() -> int:
         action="store_true",
         help="When seeding, overwrite existing facts.",
     )
+    parser.add_argument(
+        "--skip-prewarm",
+        action="store_true",
+        help="When bootstrapping, skip the MCP package pre-fetch step.",
+    )
     args = parser.parse_args()
+
+    if args.mode == "bootstrap":
+        from . import bootstrap
+
+        return bootstrap.run(skip_prewarm=args.skip_prewarm)
 
     if args.mode == "auth":
         from . import auth

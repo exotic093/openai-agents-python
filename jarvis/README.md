@@ -7,19 +7,25 @@ agent loop that takes initiative.
 ## Quick start
 
 ```bash
-# 1. From the repo root, install Jarvis (uses the local Agents SDK)
+# One-shot setup (installs jarvis, runs bootstrap, pre-warms MCP packages)
+cd jarvis && bash setup.sh
+
+# Then:
+#   edit .env to set OPENAI_API_KEY
+jarvis auth all      # interactive login walkthrough for every integration
+jarvis               # start chatting
+
+jarvis voice         # voice mode (needs mic + speakers)
+```
+
+Manual install:
+
+```bash
 cd jarvis
 uv pip install -e .
-
-# 2. Configure
-cp .env.example .env
-# edit .env and set OPENAI_API_KEY
-
-# 3. Run text mode
+cp .env.example .env  # edit and set OPENAI_API_KEY
+jarvis bootstrap      # create dirs, seed profile, cache MCP packages
 jarvis
-
-# Or voice mode (needs a working mic + speakers)
-jarvis voice
 ```
 
 ## What it can do out of the box
