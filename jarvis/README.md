@@ -1,8 +1,25 @@
 # Jarvis
 
 A personal AI assistant built on the [OpenAI Agents SDK](https://github.com/openai/openai-agents-python).
-Text + voice modes, persistent long-term memory, file/shell/web tools, and an
-agent loop that takes initiative.
+Text + voice modes with **streaming output**, persistent long-term memory,
+desktop notifications, **trading-specific tools**, an **audit log** of every
+tool call, a **scheduler + daemon** for proactive tasks, and 13 MCP integrations
+covering email, calendars, messaging, trading, and CRM.
+
+## CLI surface
+
+| Command | Purpose |
+| --- | --- |
+| `jarvis` | Streaming text REPL (default mode) |
+| `jarvis voice` | Voice mode via OpenAI Realtime API |
+| `jarvis status` | Single-screen dashboard of everything Jarvis sees |
+| `jarvis brief` | Generate a morning briefing using your integrations |
+| `jarvis bootstrap` | One-shot non-login setup |
+| `jarvis onboard` | 25-question profile interview |
+| `jarvis seed` | Pre-populate profile from `seed_data.py` |
+| `jarvis auth [name\|all]` | Guided credential setup for any integration |
+| `jarvis schedule list\|add\|remove\|enable\|disable [name] [prompt]` | Manage scheduled tasks |
+| `jarvis daemon` | Run the scheduler loop — proactive tasks fire on schedule |
 
 ## Quick start
 

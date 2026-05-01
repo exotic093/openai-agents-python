@@ -1,14 +1,15 @@
-"""Interactive text-mode REPL for Jarvis."""
+"""Interactive text-mode REPL for Jarvis (streaming output)."""
 
 from __future__ import annotations
 
 import asyncio
 
 from agents import Runner, SQLiteSession
+from openai.types.responses import ResponseTextDeltaEvent
 from rich.console import Console
-from rich.markdown import Markdown
 from rich.panel import Panel
 
+from . import audit
 from .agent import build_agent
 from .config import SESSION_DB, settings
 from .integrations import build_servers, status_report
@@ -83,14 +84,28 @@ async def _repl(agent, session) -> None:
             continue
 
         try:
-            result = await Runner.run(agent, user_input, session=session)
+            result = Runner.run_streamed(agent, input=user_input, session=session)
+            console.print("[bold cyan]jarvis›[/] ", end="")
+            async for event in result.stream_events():
+                if event.type == "raw_response_event" and isinstance(
+                    event.data, ResponseTextDeltaEvent
+                ):
+                    console.print(event.data.delta, end="", soft_wrap=True, highlight=False)
+                elif event.type == "run_item_stream_event":
+                    item = event.item
+                    if item.type == "tool_call_item":
+                        raw = getattr(item, "raw_item", None)
+                        name = getattr(raw, "name", "tool")
+                        args = getattr(raw, "arguments", "")
+                        console.print(f"\n[dim]· tool: {name} {args}[/]")
+                        audit.log_tool_call(name, {"arguments": args}, "(pending)")
+                    elif item.type == "tool_call_output_item":
+                        output = getattr(item, "output", "")
+                        audit.log_tool_call("(result)", {}, output)
+            console.print()  # final newline after stream
         except Exception as e:
-            console.print(f"[red]error:[/] {e}")
+            console.print(f"\n[red]error:[/] {e}")
             continue
-
-        console.print(
-            Panel(Markdown(result.final_output or ""), title="jarvis", border_style="cyan")
-        )
 
 
 def run() -> None:
