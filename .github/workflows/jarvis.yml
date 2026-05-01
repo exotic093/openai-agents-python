@@ -17,20 +17,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Setup uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
-      - name: Install Jarvis (editable)
-        run: uv pip install --system -e ./jarvis -e .
-      - name: Install dev tools
-        run: uv pip install --system pytest ruff mypy
-      - name: Lint
+      - name: Install jarvis with dev deps
         working-directory: jarvis
-        run: |
-          ruff format --check jarvis tests
-          ruff check jarvis tests
+        run: uv sync --extra dev
+      - name: Lint (format)
+        working-directory: jarvis
+        run: uv run ruff format --check jarvis tests
+      - name: Lint (check)
+        working-directory: jarvis
+        run: uv run ruff check jarvis tests
       - name: Tests
+        working-directory: jarvis
         env:
-          PYTHONPATH: jarvis
-        run: pytest -q jarvis/tests/
+          PYTHONPATH: .
+        run: uv run pytest -q tests/
