@@ -32,9 +32,7 @@ class MemoryStore:
             )
             """
         )
-        self._conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_memory_key ON memory(key)"
-        )
+        self._conn.execute("CREATE INDEX IF NOT EXISTS idx_memory_key ON memory(key)")
         self._conn.commit()
 
     def remember(self, key: str, value: str) -> int:

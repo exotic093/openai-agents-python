@@ -41,7 +41,9 @@ PROFILE_QUESTIONS: list[ProfileQuestion] = [
     ProfileQuestion("relationships.pets", "Any pets?"),
     ProfileQuestion("goals.short_term", "Main goals for the next few months?", multi=True),
     ProfileQuestion("goals.long_term", "Bigger long-term goals?", multi=True),
-    ProfileQuestion("preferences.communication", "How should I talk to you — formal, casual, blunt, witty?"),
+    ProfileQuestion(
+        "preferences.communication", "How should I talk to you — formal, casual, blunt, witty?"
+    ),
     ProfileQuestion("preferences.units", "Metric or imperial? 24h or 12h time?"),
     ProfileQuestion("preferences.privacy", "Anything I should NEVER bring up or store?"),
     ProfileQuestion("preferences.misc", "Anything else important about you I should remember?"),
@@ -77,7 +79,7 @@ def run_onboarding() -> None:
         saved += 1
     console.print(f"[green]saved {saved} facts to long-term memory.[/]")
     console.print(
-        "[dim]you can update anytime — just tell me, e.g. \"remember that I switched jobs to X\".[/]"
+        '[dim]you can update anytime — just tell me, e.g. "remember that I switched jobs to X".[/]'
     )
 
 

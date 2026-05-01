@@ -21,9 +21,7 @@ SESSION_DB = DATA_DIR / "sessions.db"
 class Settings:
     user_name: str = os.environ.get("JARVIS_USER", os.environ.get("USER", "sir"))
     text_model: str = os.environ.get("JARVIS_MODEL", "gpt-5")
-    voice_model: str = os.environ.get(
-        "JARVIS_VOICE_MODEL", "gpt-realtime"
-    )
+    voice_model: str = os.environ.get("JARVIS_VOICE_MODEL", "gpt-realtime")
     voice: str = os.environ.get("JARVIS_VOICE", "ballad")
     workspace: Path = Path(os.environ.get("JARVIS_WORKSPACE", Path.cwd()))
     allow_shell: bool = os.environ.get("JARVIS_ALLOW_SHELL", "1") == "1"

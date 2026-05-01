@@ -68,7 +68,9 @@ def check_prereqs() -> bool:
     if uvx:
         _ok("uvx available")
     else:
-        _warn("uvx not found — Python-based MCP (whatsapp, telegram, mt5) won't work. Install: `pip install uv`")
+        _warn(
+            "uvx not found — Python-based MCP (whatsapp, telegram, mt5) won't work. Install: `pip install uv`"
+        )
 
     return ok
 

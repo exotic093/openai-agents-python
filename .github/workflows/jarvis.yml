@@ -1,0 +1,36 @@
+name: Jarvis
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "jarvis/**"
+      - ".github/workflows/jarvis.yml"
+  pull_request:
+    paths:
+      - "jarvis/**"
+      - ".github/workflows/jarvis.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install Jarvis (editable)
+        run: uv pip install --system -e ./jarvis -e .
+      - name: Install dev tools
+        run: uv pip install --system pytest ruff mypy
+      - name: Lint
+        working-directory: jarvis
+        run: |
+          ruff format --check jarvis tests
+          ruff check jarvis tests
+      - name: Tests
+        env:
+          PYTHONPATH: jarvis
+        run: pytest -q jarvis/tests/

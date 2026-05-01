@@ -23,12 +23,8 @@ DEFAULT_PROFILE: dict[str, str] = {
         "Business owner, institutional trader, and SaaS founder. Owns and "
         "operates multiple companies."
     ),
-    "work.events_business": (
-        "Noorallah Events — events company owned and operated by Sir."
-    ),
-    "work.real_estate": (
-        "Owns a real estate portfolio in Egypt; manages multiple properties."
-    ),
+    "work.events_business": ("Noorallah Events — events company owned and operated by Sir."),
+    "work.real_estate": ("Owns a real estate portfolio in Egypt; manages multiple properties."),
     "work.trading": (
         "Institutional trader. Trades forex and commodities — gold, silver, "
         "cocoa — for a living. Also manages capital on behalf of clients."
@@ -40,22 +36,16 @@ DEFAULT_PROFILE: dict[str, str] = {
         "market is going."
     ),
     "work.focus": (
-        "Scaling every business toward category leadership; preparing the "
-        "Tradelantren launch."
+        "Scaling every business toward category leadership; preparing the Tradelantren launch."
     ),
     # Lifestyle
     "lifestyle.weight": "67 kg",
     "lifestyle.physique": "Good physique; takes care of his body.",
-    "lifestyle.sleep": (
-        "Roughly 6 hours per night, sometimes less due to work demands."
-    ),
+    "lifestyle.sleep": ("Roughly 6 hours per night, sometimes less due to work demands."),
     # Relationships
-    "relationships.network": (
-        "Strong network of powerful connections and trusted close friends."
-    ),
+    "relationships.network": ("Strong network of powerful connections and trusted close friends."),
     "relationships.pets": (
-        "Two cats — they are his world; treat as top-priority topic when "
-        "mentioned."
+        "Two cats — they are his world; treat as top-priority topic when mentioned."
     ),
     # Goals
     "goals.long_term": (
@@ -69,8 +59,7 @@ DEFAULT_PROFILE: dict[str, str] = {
         "drop the formality to match. Never sycophantic."
     ),
     "preferences.privacy": (
-        "No topics off-limits. Capture and retain all relevant context to be "
-        "maximally useful."
+        "No topics off-limits. Capture and retain all relevant context to be maximally useful."
     ),
     "preferences.action_authority": (
         "Authorized to send messages, fire off requests, and take actions on "

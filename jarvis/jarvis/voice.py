@@ -14,7 +14,6 @@ from typing import Any
 
 import numpy as np
 import sounddevice as sd
-
 from agents.realtime import RealtimeAgent, RealtimeRunner, RealtimeSession, RealtimeSessionEvent
 
 from .agent import _instructions

@@ -328,24 +328,26 @@ def _write_env(values: dict[str, str]) -> None:
     ENV_PATH.write_text("\n".join(out) + "\n")
 
 
-def _ask(field: Field, current: str | None) -> str | None:
-    label = f"{field.env_var}"
-    hint = f" [current: ***]" if current and field.secret else (
-        f" [current: {current}]" if current else ""
+def _ask(spec: Field, current: str | None) -> str | None:
+    label = f"{spec.env_var}"
+    hint = (
+        " [current: ***]"
+        if current and spec.secret
+        else (f" [current: {current}]" if current else "")
     )
-    default = current or field.default
-    suffix = f" (default: {default})" if default and not field.secret else ""
-    if field.optional:
+    default = current or spec.default
+    suffix = f" (default: {default})" if default and not spec.secret else ""
+    if spec.optional:
         suffix += " (optional, blank to skip)"
-    console.print(f"[bold]{label}[/]{hint}: {field.prompt}{suffix}")
-    if field.secret:
+    console.print(f"[bold]{label}[/]{hint}: {spec.prompt}{suffix}")
+    if spec.secret:
         value = getpass.getpass("  > ")
     else:
         value = input("  > ").strip()
     if not value:
         if default:
             return default
-        if field.optional:
+        if spec.optional:
             return None
         return current  # keep existing
     return value
@@ -354,8 +356,7 @@ def _ask(field: Field, current: str | None) -> str | None:
 def configure(provider: Provider) -> None:
     console.print(
         Panel.fit(
-            f"[bold cyan]{provider.name}[/] — {provider.summary}\n\n"
-            f"{provider.instructions}",
+            f"[bold cyan]{provider.name}[/] — {provider.summary}\n\n{provider.instructions}",
             border_style="cyan",
         )
     )
@@ -371,10 +372,10 @@ def configure(provider: Provider) -> None:
 
     existing = _read_env()
     new_values: dict[str, str] = {}
-    for field in provider.fields:
-        result = _ask(field, existing.get(field.env_var))
+    for spec in provider.fields:
+        result = _ask(spec, existing.get(spec.env_var))
         if result:
-            new_values[field.env_var] = result
+            new_values[spec.env_var] = result
 
     if not new_values:
         console.print("[yellow]nothing entered; .env unchanged.[/]")
@@ -394,9 +395,7 @@ def list_providers() -> None:
         configured = all(env.get(f.env_var) for f in p.fields if not f.optional)
         mark = "[green]●[/]" if configured else "[dim]○[/]"
         rows.append(f"  {mark} [bold]{p.name:<18}[/] {p.summary}")
-    console.print(
-        Panel("\n".join(rows), title="integrations", border_style="cyan")
-    )
+    console.print(Panel("\n".join(rows), title="integrations", border_style="cyan"))
 
 
 def run_all() -> int:
@@ -412,9 +411,7 @@ def run_all() -> int:
     done = 0
     skipped = 0
     for provider in PROVIDERS:
-        console.print(
-            f"\n[bold]› {provider.name}[/] — {provider.summary}"
-        )
+        console.print(f"\n[bold]› {provider.name}[/] — {provider.summary}")
         choice = input("  configure now? [y/N/q]: ").strip().lower()
         if choice == "q":
             console.print("[yellow]stopped.[/]")
@@ -424,9 +421,7 @@ def run_all() -> int:
             continue
         configure(provider)
         done += 1
-    console.print(
-        f"\n[green]auth sweep done.[/] configured: {done} · skipped: {skipped}"
-    )
+    console.print(f"\n[green]auth sweep done.[/] configured: {done} · skipped: {skipped}")
     return 0
 
 

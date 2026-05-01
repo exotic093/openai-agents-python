@@ -88,7 +88,9 @@ async def _repl(agent, session) -> None:
             console.print(f"[red]error:[/] {e}")
             continue
 
-        console.print(Panel(Markdown(result.final_output or ""), title="jarvis", border_style="cyan"))
+        console.print(
+            Panel(Markdown(result.final_output or ""), title="jarvis", border_style="cyan")
+        )
 
 
 def run() -> None:
