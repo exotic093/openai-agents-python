@@ -82,6 +82,7 @@ packages = ["src/agents"]
 [tool.ruff]
 line-length = 100
 target-version = "py39"
+extend-exclude = ["jarvis"]
 
 [tool.ruff.lint]
 select = [
@@ -106,6 +107,7 @@ strict = true
 disallow_incomplete_defs = false
 disallow_untyped_defs = false
 disallow_untyped_calls = false
+exclude = ["jarvis/"]
 
 [[tool.mypy.overrides]]
 module = "sounddevice.*"
@@ -128,6 +130,8 @@ exclude_also = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
+testpaths = ["tests"]
+norecursedirs = ["jarvis"]
 filterwarnings = [
     # This is a warning that is expected to happen: we have an async filter that raises an exception
     "ignore:coroutine 'test_async_input_filter_fails.<locals>.invalid_input_filter' was never awaited:RuntimeWarning",
