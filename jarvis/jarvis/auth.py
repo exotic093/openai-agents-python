@@ -41,6 +41,42 @@ class Provider:
 
 
 PROVIDERS: list[Provider] = [
+    # === Model providers (brains) ===
+    Provider(
+        name="openai",
+        summary="OpenAI (GPT-5) — default model provider",
+        url="https://platform.openai.com/api-keys",
+        instructions=(
+            "1. Sign in to platform.openai.com.\n"
+            "2. Create a new secret API key.\n"
+            "3. Paste it below."
+        ),
+        fields=[Field("OPENAI_API_KEY", "OpenAI API key (sk-...)", secret=True)],
+    ),
+    Provider(
+        name="claude",
+        aliases=["anthropic"],
+        summary="Anthropic Claude — fallback model provider",
+        url="https://console.anthropic.com/settings/keys",
+        instructions=(
+            "1. Sign in to console.anthropic.com.\n"
+            "2. Settings → API Keys → Create Key.\n"
+            "3. Paste the key below. Jarvis will use Claude automatically "
+            "when the OpenAI key is missing or failing."
+        ),
+        fields=[Field("ANTHROPIC_API_KEY", "Anthropic API key (sk-ant-...)", secret=True)],
+    ),
+    Provider(
+        name="gemini",
+        aliases=["google_ai"],
+        summary="Google Gemini — fallback model provider",
+        url="https://aistudio.google.com/apikey",
+        instructions=(
+            "1. Go to Google AI Studio.\n2. Get API key → Create API key.\n3. Paste the key below."
+        ),
+        fields=[Field("GEMINI_API_KEY", "Gemini API key", secret=True)],
+    ),
+    # === Integrations ===
     Provider(
         name="gmail",
         summary="Gmail (read/search/draft/label/send)",

@@ -6,6 +6,10 @@ desktop notifications, **trading-specific tools**, an **audit log** of every
 tool call, a **scheduler + daemon** for proactive tasks, and 13 MCP integrations
 covering email, calendars, messaging, trading, and CRM.
 
+**Multi-provider brain.** Runs on OpenAI GPT-5 by default, with **Claude** and
+**Gemini** as automatic fallbacks (via LiteLLM). Provide any one API key and
+Jarvis picks the first that works.
+
 ## CLI surface
 
 | Command | Purpose |
@@ -28,7 +32,7 @@ covering email, calendars, messaging, trading, and CRM.
 cd jarvis && bash setup.sh
 
 # Then:
-#   edit .env to set OPENAI_API_KEY
+#   edit .env to set OPENAI_API_KEY (or ANTHROPIC_API_KEY, or GEMINI_API_KEY)
 jarvis auth all      # interactive login walkthrough for every integration
 jarvis               # start chatting
 
@@ -45,6 +49,28 @@ jarvis bootstrap      # create dirs, seed profile, cache MCP packages
 jarvis
 ```
 
+## Model providers (brains)
+
+Jarvis auto-selects the first provider whose API key is set in `.env`, in
+this order (overridable via `JARVIS_PROVIDER`):
+
+| Provider | Env key | Default model |
+| --- | --- | --- |
+| OpenAI  | `OPENAI_API_KEY`    | `gpt-5` |
+| Claude  | `ANTHROPIC_API_KEY` | `anthropic/claude-opus-4-7` |
+| Gemini  | `GEMINI_API_KEY`    | `gemini/gemini-2.5-pro` |
+
+Guided setup for any of them:
+
+```bash
+jarvis auth openai
+jarvis auth claude
+jarvis auth gemini
+```
+
+`jarvis status` shows which provider is active and which keys are
+configured.
+
 ## What it can do out of the box
 
 | Tool | Description |
@@ -56,6 +82,8 @@ jarvis
 | `web_search`, `fetch_url` | DuckDuckGo search + URL fetch |
 | `open_url`, `open_path` | Open in default browser / app |
 | `remember`, `recall`, `list_memories`, `forget_memory` | Long-term memory |
+| `notify`, `speak` | Desktop notifications + TTS |
+| `market_status`, `position_size`, `monte_carlo_path`, `risk_reward` | Trading toolkit |
 
 Long-term memory persists in `~/.jarvis/memory.db`. The agent is instructed
 to write to it whenever you share something worth remembering.
@@ -93,11 +121,13 @@ View / refresh anytime: `/profile` or `/onboard` inside the REPL.
 - `/reset` — clear conversation session (memory is preserved)
 - `/profile` — print everything Jarvis knows about you
 - `/onboard` — rerun the interview to add/update facts
+- `/integrations` — active/inactive integration status
 
 ## Configuration
 
 All knobs live in `.env` — see `.env.example`. Notable ones:
 
+- `JARVIS_PROVIDER` — force `openai`, `claude`, or `gemini`.
 - `JARVIS_WORKSPACE` — where file ops + shell run.
 - `JARVIS_ALLOW_SHELL=0` — disable shell entirely.
 - `JARVIS_MODEL`, `JARVIS_VOICE_MODEL`, `JARVIS_VOICE` — model/voice overrides.
@@ -133,6 +163,8 @@ inactive integrations.
 ```bash
 jarvis auth                # list every integration, ● = configured / ○ = not
 jarvis auth all            # walk through ALL of them in one sitting
+jarvis auth claude         # add your Anthropic key
+jarvis auth gemini         # add your Google AI Studio key
 jarvis auth gmail          # walk through Gmail credentials
 jarvis auth slack          # walk through Slack bot setup
 jarvis auth mt5            # MetaTrader 5 (alias of metatrader5)
