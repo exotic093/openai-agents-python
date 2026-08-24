@@ -5,7 +5,8 @@ description = "Personal AI assistant built on the OpenAI Agents SDK."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "openai-agents[voice,realtime]",
+    "openai-agents[voice,realtime,litellm]",
+    "litellm>=1.72",
     "rich>=13.7",
     "python-dotenv>=1.0",
     "httpx>=0.27",

@@ -9,6 +9,7 @@ from .config import settings
 from .integrations import build_servers
 from .memory import get_store
 from .profile import profile_block
+from .providers import build_model, select
 from .tools import ALL_TOOLS
 
 
@@ -54,10 +55,18 @@ Persona
 
 def build_agent(mcp_servers: list[MCPServer] | None = None) -> Agent:
     servers = mcp_servers if mcp_servers is not None else build_servers()
+    # Honor JARVIS_MODEL if explicitly set (overrides provider auto-selection),
+    # otherwise pick the first provider whose API key is present.
+    explicit_model = settings.text_model
+    if explicit_model and explicit_model != "gpt-5":
+        model_arg = explicit_model
+    else:
+        choice = select()
+        model_arg = build_model(choice)
     return Agent(
         name="Jarvis",
         instructions=_instructions(),
-        model=settings.text_model,
+        model=model_arg,
         tools=ALL_TOOLS,
         mcp_servers=servers,
     )

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import shutil
 from pathlib import Path
 
@@ -10,7 +9,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from . import audit
+from . import audit, providers
 from .config import DATA_DIR, MEMORY_DB, SESSION_DB, settings
 from .integrations import REGISTRY
 from .memory import get_store
@@ -47,13 +46,12 @@ def run() -> int:
             shutil.which("node") or "[red]missing[/]",
         ),
         ("uvx", shutil.which("uvx") or "[red]missing[/]"),
-        (
-            "OPENAI_API_KEY",
-            "[green]set[/]" if os.environ.get("OPENAI_API_KEY") else "[red]missing[/]",
-        ),
         ("shell tool", "enabled" if settings.allow_shell else "disabled"),
     ]
     console.print(_kv_table("prerequisites", rows))
+
+    # Model provider
+    console.print(Panel(providers.status_report(), title="model provider", border_style="cyan"))
 
     # Memory
     store = get_store()
