@@ -4,6 +4,10 @@ Knowledge file for a gold-analysis and position-monitoring bot. It restates the 
 owner's two gold skill files and adds no new strategy. Where the sources are silent, it says so.
 Extracted 2026-10-08.
 
+> **Owner decision (2026-10-08):** the bot now builds positions itself under `GOLD_BOT_INTEGRATION.txt`
+> (v2); an engine helper is optional. Where this file says plans come only from a helper (§0, Stage 4, §6,
+> §7), that prompt takes precedence. Everything else here remains the extracted method.
+
 ---
 
 ## 0. How to use this file

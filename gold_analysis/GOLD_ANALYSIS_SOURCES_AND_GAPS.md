@@ -269,7 +269,7 @@ PROPOSED — not part of the method; adopt only by owner decision.
 2024–26 (GSE 261–262).
 
 7. A volatility gate on TD: split TD's results by vol ratio. The gate was the most robust gain in the REACH
-   audit (GSE 92–93, 281); the bot already applies it as an owner rule (§9).
+   audit (GSE 92–93, 281); the bot already grades setups by it (§9).
 8. Entry type, pullback limit versus breakout stop: limit fills are adversely selected (GSE 287), and
    breakout stop entries with both gates tested best (GSE 282–283).
 9. H4 agreement for TD's direction: trading against D1+H4 lost in every style (GSE 97); TD only tested a
@@ -288,20 +288,26 @@ PROPOSED — not part of the method; adopt only by owner decision.
 | Use | Status | Why |
 |---|---|---|
 | Descriptive analysis | Ready | The regime-gate formula, level tiers, sessions, blackouts, SMT and volume rules, and output formats are fully documented, and `gold_analysis/regime_gate.py` computes the gate. Structure reads stay qualitative until G6 closes |
-| Conditional trade planning | Not ready in this workspace | The method allows plans only from a helper; both helpers are absent and the canonical engine is undefined (G1, G2). With a helper supplied and an engine named, the bot can relay, explain, sanity-check and monitor plans |
-| Monitoring | Partly ready | Invalidation, cancel, TP1 and time rules are documented; deterioration, the runner rule and broker verification are not (G4, G5) |
+| Conditional trade planning | Ready under the v2 owner decisions (§9) | The bot builds positions itself, overriding the helper-only rule. Under the documented method alone it would be blocked (G1, G2). Its plans have not been checked for parity with the original helpers (G3) |
+| Monitoring | Ready under v2 | Documented invalidation, cancel, TP1 and time rules, plus the owner's report-only WEAKENING state and read-only eToro positions where the tool allows |
 
 ---
 
-## 9. Owner decisions applied in the bot prompt (2026-10-08)
+## 9. Owner decisions applied in the bot prompt (2026-10-08, v2)
 
-These are decisions for this deployment, not extracted method. `GOLD_ANALYSIS_BRAIN.md` is unchanged;
-`GOLD_BOT_INTEGRATION.txt` applies them.
+These are decisions for this deployment, not extracted method. `GOLD_BOT_INTEGRATION.txt` (v2) applies
+them and takes precedence over `GOLD_ANALYSIS_BRAIN.md` where they differ.
 
-| Decision | Resolves | Basis |
+| Decision | Changes or fills | Basis |
 |---|---|---|
-| One engine: REACH recommended (regime gate, D1+H4 agreement, breakout stop entry); TD when only `tools/xau_td.py` is available | G2 (engine), pending the replay tests in §7 | The best-tested combination (GSE 281–283) |
-| The regime gate applies to every new plan, whichever engine | G2 (gate scope) | No measured edge outside the gate (GSE 91–95) |
+| The bot builds positions itself; an engine helper is optional | Overrides "no helper, no plan" (GSE 22–27, 59; XER 10) | Owner instruction |
+| REACH-style construction: D1+H4 direction, REACH stop floor and targets (TP1 ≥ 0.5R, TP2 ≥ 1.5R), cancel if TP2 prints first, TD zones for pullback entries | G2 (engine) | GSE 37–48; XER 14–17 |
+| Entry type follows M15 structure: pullback limit while M15 runs against the bias, breakout stop while it runs with it | Proposal 8 | GSE 282–283, 287; untested as a switching rule |
+| The regime gate grades setups: A when open; B is published but arms only when the gate opens (configurable); never in shock | Replaces the v1 rule that the gate blocks every plan | No measured edge outside the gate (GSE 91–95) |
+| Swing = a candle beyond the two candles on each side; break of structure = a close beyond the latest swing | Fills the missing swing and BOS definitions (G3, G6) | A standard definition, not from the sources |
+| The stop is never parked just past an unswept pool | Proposal 10 | Untested |
+| WEAKENING is a report-only state between on-track and invalidated | Fills "deterioration" (G4) | Exits could not create an edge (GSE 286), so prices stay as planned |
+| Prices are published in eToro terms; levels from another feed are shifted by the measured offset | — | The execution feed differs from the analysis feed |
 | A post-TP1 runner counts as an open position | G5 | Thesis 8 |
-| The bot runs every hour at hh:15 GST; each run is one complete cycle; continuity comes from the scheduler | — | Hourly hh:15 checks while active (XER 183); log the gate every run (GSE 259) |
-| The regime gate is computed by `gold_analysis/regime_gate.py`, never estimated | — | GSE 28–32, 90 |
+| Runs every hour at hh:15 GST while the market is open; continuity comes from the routine | — | XER 183; GSE 259 |
+| The regime gate is computed exactly (`regime_gate.py` or the same formulas), never estimated | — | GSE 28–32, 90 |
