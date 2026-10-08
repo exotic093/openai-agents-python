@@ -253,17 +253,33 @@ gate or trigger in the brain. Consistent.
 PROPOSED — not part of the method; adopt only by owner decision.
 
 1. Supply the helper(s) and the journal; declare `ENGINE = TD` or `ENGINE = REACH` in the bot configuration;
-   decide whether the regime gate applies to TD (G1, G2).
+   decide whether the regime gate applies to TD (G1, G2). Engine and gate scope are now decided for the bot
+   (§9).
 2. Before trusting any re-implementation, require exact parity: reproduce TD-1007 and every journaled plan
    from the same historical inputs, and treat any mismatch as a defect (G3).
 3. Add a read-only broker-state reader so the bot can label positions BROKER-VERIFIED and reconcile engine
    fills with real fills (G4).
-4. Decide whether a post-TP1 runner blocks a new plan. Until you decide, the integration instruction applies
-   your thesis: the runner counts as open (G5).
+4. Decide whether a post-TP1 runner blocks a new plan. Decided: the runner counts as open (G5, §9).
 5. If you want a "deterioration" state, define it as report-only so it cannot change the tested stop, targets
    or expiry — or leave it undefined (G4).
 6. Restore `references/*.md`; let the helper compute the regime gate (GSE 78 plans this for v2.4); update the
    stale JS-G and "SETUP v3" references in GSE (G6). These edit your original files and are left to you.
+
+**Analysis changes to test on the bid/ask replay.** Keep a change only if it holds in both 2021–23 and
+2024–26 (GSE 261–262).
+
+7. A volatility gate on TD: split TD's results by vol ratio. The gate was the most robust gain in the REACH
+   audit (GSE 92–93, 281); the bot already applies it as an owner rule (§9).
+8. Entry type, pullback limit versus breakout stop: limit fills are adversely selected (GSE 287), and
+   breakout stop entries with both gates tested best (GSE 282–283).
+9. H4 agreement for TD's direction: trading against D1+H4 lost in every style (GSE 97); TD only tested a
+   looser trend rule (XER 23).
+10. A liquidity check beyond the stop: the Asian range high/low is the most-swept level, and equal
+    highs/lows are targets (GSE 150–154). Untested in the sources.
+11. Trend extension: split results by daily z level and by the share of the daily ATR already used.
+    Untested in the sources.
+12. Execution costs: measure live spread, commission and stop-order slippage against the Dukascopy prices;
+    every extra $0.10 per round trip costs about 0.008R (GSE 290).
 
 ---
 
@@ -271,6 +287,21 @@ PROPOSED — not part of the method; adopt only by owner decision.
 
 | Use | Status | Why |
 |---|---|---|
-| Descriptive analysis | Ready | The regime-gate formula, level tiers, sessions, blackouts, SMT and volume rules, and output formats are fully documented. Structure reads stay qualitative until G6 closes |
+| Descriptive analysis | Ready | The regime-gate formula, level tiers, sessions, blackouts, SMT and volume rules, and output formats are fully documented, and `gold_analysis/regime_gate.py` computes the gate. Structure reads stay qualitative until G6 closes |
 | Conditional trade planning | Not ready in this workspace | The method allows plans only from a helper; both helpers are absent and the canonical engine is undefined (G1, G2). With a helper supplied and an engine named, the bot can relay, explain, sanity-check and monitor plans |
 | Monitoring | Partly ready | Invalidation, cancel, TP1 and time rules are documented; deterioration, the runner rule and broker verification are not (G4, G5) |
+
+---
+
+## 9. Owner decisions applied in the bot prompt (2026-10-08)
+
+These are decisions for this deployment, not extracted method. `GOLD_ANALYSIS_BRAIN.md` is unchanged;
+`GOLD_BOT_INTEGRATION.txt` applies them.
+
+| Decision | Resolves | Basis |
+|---|---|---|
+| One engine: REACH recommended (regime gate, D1+H4 agreement, breakout stop entry); TD when only `tools/xau_td.py` is available | G2 (engine), pending the replay tests in §7 | The best-tested combination (GSE 281–283) |
+| The regime gate applies to every new plan, whichever engine | G2 (gate scope) | No measured edge outside the gate (GSE 91–95) |
+| A post-TP1 runner counts as an open position | G5 | Thesis 8 |
+| The bot runs every hour at hh:15 GST; each run is one complete cycle; continuity comes from the scheduler | — | Hourly hh:15 checks while active (XER 183); log the gate every run (GSE 259) |
+| The regime gate is computed by `gold_analysis/regime_gate.py`, never estimated | — | GSE 28–32, 90 |
