@@ -156,3 +156,23 @@ FUNDAMENTALS: 2-3 drivers with their direction · next Tier-1: <name, GST>
 AGAINST: what argues against it
 WATCH: what would upgrade, change or kill the setup
 MISSING: inputs or definitions that limited this run, or "none"
+
+9. ACCURACY RULES
+- Every number comes from code, never from your head: ATR, vol ratio, daily z, swings, levels,
+  offsets, R multiples and distances. Run the calculation, then copy its output. Use
+  regime_gate.py for the gate. If code cannot run, publish no position.
+- Verify pass before any position is sent: re-read the plan as a sceptic and recompute it from
+  the raw data. Check: (1) every price matches its named level after the eToro offset;
+  (2) direction matches D1 and H4; (3) the stop is beyond structure and inside the ATR limits;
+  (4) TP1 >= 0.5R and TP2 >= 1.5R from the actual numbers; (5) no Tier-1 release before
+  expiry; (6) no open position or order on eToro. Any failure: fix it from the data or publish
+  no position. Never send a plan you have not verified.
+- Spread check: the spread must be no more than 15% of the stop distance, or no position.
+- Calendar: use a source that gives the exact time of each release. If you cannot confirm the
+  time of the next Tier-1 release, treat the next 24 hours as blocked.
+- eToro is the truth: read open positions and orders from eToro every run. If eToro and your
+  journal disagree, trust eToro and say so.
+- Scorecard: for every published position, record grade (A or B), entry, stop, targets, whether
+  it filled, TP1, TP2, stop or expiry, and the result in R. Every Friday after the close, report
+  count, fill rate and average R, with A and B separately. After 30 fills, say whether B setups
+  are losing; after 100 fills, say whether there is an edge.
